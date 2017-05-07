@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:id="@+id/ll_myButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <TextView
+            android:id="@+id/tv_mine_button"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:layout_weight="9"
+            android:layout_margin="@dimen/dp_10"
+            android:layout_gravity="center_vertical"
+            android:text="@string/myOrder"
+            android:textSize="@dimen/sp_20"
+            />
+        <TextView
+            android:id="@+id/tv_mine_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp_10"
+            android:layout_gravity="center_vertical"
+            android:text="@string/All"
+            android:visibility="gone"
+            android:textColor="@color/textGray"
+            android:textSize="@dimen/dp_15"
+            />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/dp_10"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/ic_sel_arrow"
+            />
+    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_1"
+        android:background="@color/BackgroundGray"
+        />
+
+</LinearLayout>

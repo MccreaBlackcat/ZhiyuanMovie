@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <TextView
+            android:id="@+id/tv_shopName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp_5"
+            android:lines="1"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:text="@string/shopName"
+            android:textSize="@dimen/sp_20"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_margin="@dimen/dp_5"
+            android:text="@string/shopunitPrice"
+            android:textSize="@dimen/sp_20"
+            android:id="@+id/tv_shopUnitPrice" />
+
+        <TextView
+            android:id="@+id/tv_shopAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_margin="@dimen/dp_5"
+            android:text="@string/shopAmount"
+            android:textSize="@dimen/sp_20"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_margin="@dimen/dp_5"
+            android:text="@string/shopTotalPrice"
+            android:textSize="@dimen/sp_20"
+            android:id="@+id/tv_shopTotalPrice" />
+    </LinearLayout>
+</LinearLayout>

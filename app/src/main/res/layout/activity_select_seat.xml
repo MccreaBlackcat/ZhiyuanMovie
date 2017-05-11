@@ -14,6 +14,17 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         >
     </android.support.v7.widget.Toolbar>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_movie_info"
+        android:layout_margin="@dimen/dp_5"
+        android:text="@string/showDate"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_1"
+        android:background="@color/BackgroundGray"/>
     <com.timestudio.zhiyuanmovie.widget.SeatTable
         android:id="@+id/st_selectSeat"
         android:layout_width="match_parent"
@@ -34,12 +45,12 @@
             android:layout_margin="@dimen/dp_5"
             android:text="@string/selectSeat"
             />
-        <ListView
+        <com.timestudio.zhiyuanmovie.widget.HorizontalListView
             android:id="@+id/lv_Selectseat"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_30">
+            android:layout_height="@dimen/dp_50">
 
-        </ListView>
+        </com.timestudio.zhiyuanmovie.widget.HorizontalListView>
 
     </LinearLayout>
     <TextView
@@ -72,7 +83,7 @@
                 android:id="@+id/tv_seat_money"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/totalPrice"
+                android:text="@string/oneTimeSelect"
                 />
         </LinearLayout>
         <Button

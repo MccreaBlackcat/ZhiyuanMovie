@@ -1,5 +1,7 @@
 package com.timestudio.zhiyuanmovie.bean;
 
+import java.io.Serializable;
+
 import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.datatype.BmobFile;
 
@@ -7,7 +9,7 @@ import cn.bmob.v3.datatype.BmobFile;
  * Created by strongShen on 2017/5/3.
  */
 
-public class Movie extends BmobObject {
+public class Movie extends BmobObject implements Serializable{
 
     private String movieName;
     private String introduction; //简介

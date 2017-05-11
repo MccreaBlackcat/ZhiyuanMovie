@@ -37,11 +37,12 @@ public class ShopPresenter extends BasePresenter<ShopView> {
      * 提交订单
      */
 
-    public void submitTotal(int totalPrice,final List<ShopOrder> shopDatas,String userId) {
+    public void submitTotal(int totalPrice,final List<ShopOrder> shopDatas,String userId,Shop shop) {
         //先创建一个总的订单，然后根据订单号，创建商品订单，保存订单内容
         Order order = new Order();
         order.setUserId(userId);
         order.setOrderName(shopDatas.get(0).getShopName());
+        order.setPhoto(shop.getGoodsPhoto());
         order.setOrderType("shop");
         order.setUsed(false);
         order.setPaid(false);

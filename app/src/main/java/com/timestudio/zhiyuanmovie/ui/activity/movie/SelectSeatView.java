@@ -10,8 +10,15 @@ import java.util.List;
  */
 
 public interface SelectSeatView extends BaseMvpView {
+    /**获取座位数据*/
     void getSeatDateSuccess(List<Seat> seats);
     void getSeatDateFailure();
+
+    /**
+     * 提交订单
+     */
+    void onPutOrderSuccess(String orderId);
+    void onPutOrderFailure();
 
     SelectSeatView NULL = new SelectSeatView() {
         @Override
@@ -21,6 +28,16 @@ public interface SelectSeatView extends BaseMvpView {
 
         @Override
         public void getSeatDateFailure() {
+
+        }
+
+        @Override
+        public void onPutOrderSuccess(String orderId) {
+
+        }
+
+        @Override
+        public void onPutOrderFailure() {
 
         }
     };

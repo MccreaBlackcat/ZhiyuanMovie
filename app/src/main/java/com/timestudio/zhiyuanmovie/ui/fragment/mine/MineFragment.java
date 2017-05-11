@@ -1,6 +1,10 @@
 package com.timestudio.zhiyuanmovie.ui.fragment.mine;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -11,25 +15,32 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.timestudio.zhiyuanmovie.R;
 import com.timestudio.zhiyuanmovie.adapter.MineAdapter;
 import com.timestudio.zhiyuanmovie.bean.MyUser;
+import com.timestudio.zhiyuanmovie.bean.Order;
+import com.timestudio.zhiyuanmovie.ui.activity.mine.OrderActivity;
 import com.timestudio.zhiyuanmovie.ui.activity.user.login.LoginActivity;
-import com.timestudio.zhiyuanmovie.ui.activity.user.regist.RegistView;
+import com.timestudio.zhiyuanmovie.utils.ImageLoadOptions;
+import com.timestudio.zhiyuanmovie.widget.PicWindow;
+
+import org.hybridsquad.android.library.CropHandler;
+import org.hybridsquad.android.library.CropHelper;
+import org.hybridsquad.android.library.CropParams;
+
+import java.io.File;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.bmob.v3.BmobUser;
 
-public class MineFragment extends Fragment implements View.OnClickListener,RegistView,MineAdapter.onBtnClickLitstener{
+public class MineFragment extends Fragment implements View.OnClickListener,MineView,MineAdapter.onBtnClickLitstener{
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
 
     private View view;
@@ -46,8 +57,13 @@ public class MineFragment extends Fragment implements View.OnClickListener,Regis
     MyUser myUser = BmobUser.getCurrentUser(MyUser.class);
     private String[] vipLvlName = {"普通用户","V1 黄铜会员","V2 白银会员","V3 黄金会员","V4 白金会员","V5 钻石会员","V6 黑钻会员"};
 
+    private File headFile;
+    private Bitmap user_head;
+    private PicWindow popup;
+    private MinePresenter presenter = new MinePresenter();
+    private String ORDER_TYPE = "orderType";
+
     public MineFragment() {
-        // Required empty public constructor
     }
 
     public static MineFragment newInstance(String param1, String param2) {
@@ -63,10 +79,16 @@ public class MineFragment extends Fragment implements View.OnClickListener,Regis
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        popup = new PicWindow(getActivity(),picListener);
+        presenter.attachView(this);
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.detachView();
     }
 
     @Override
@@ -80,8 +102,10 @@ public class MineFragment extends Fragment implements View.OnClickListener,Regis
         rv_mine.setAdapter(mineAdapter);
         if (myUser != null) {
             tv_user_name.setText(myUser.getUsername());
-//        tv_vip_name.setText(vipLvlName[Integer.parseInt(myUser.getVipLvl())]);
-            tv_vip_name.setText(vipLvlName[4]);
+            tv_vip_name.setText(vipLvlName[Integer.parseInt(myUser.getVipLvl())]);
+            ImageLoader.getInstance().displayImage(myUser.getPhoto().getUrl(),
+                    iv_mine_photo,
+                    ImageLoadOptions.build_item());
         }
         mineAdapter.setOnClickListener(this);
         return view;
@@ -99,7 +123,18 @@ public class MineFragment extends Fragment implements View.OnClickListener,Regis
         //根据用户偏好，判断用户是否登录
 
         if (myUser != null) {
-            //用户已经登录，进入个人中心
+            //用户已经登录，进入个人中心或者更换头像
+            switch (view.getId()) {
+                case R.id.iv_mine_photo:
+                    if (popup != null && popup.isShowing()) {
+                        popup.dismiss();
+                    } else {
+                        popup.show();
+                    }
+                    break;
+                case R.id.tv_user_name:
+                    break;
+            }
 
         } else {
             //用户未登录，跳转到登录Activity
@@ -115,41 +150,118 @@ public class MineFragment extends Fragment implements View.OnClickListener,Regis
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null) {
             if (requestCode == 0x001) {
+                //登录成功后，更新用户UI
                 myUser = BmobUser.getCurrentUser(MyUser.class);
                 tv_user_name.setText(myUser.getUsername());
                 int vip = Integer.parseInt(myUser.getVipLvl());
                 tv_vip_name.setText(vipLvlName[vip]);
+                ImageLoader.getInstance().displayImage(myUser.getPhoto().getUrl(),
+                        iv_mine_photo,
+                        ImageLoadOptions.build_item());
+                //获取订单数据
 
+            } else if (requestCode == CropHelper.REQUEST_CROP || requestCode == CropHelper.REQUEST_CAMERA) {
+                // 帮助我们去处理结果(剪切完的图像)
+                CropHelper.handleResult(cropHandler, requestCode, resultCode, data);
             }
         }
     }
+    //popupWindow的监听
+    private PicWindow.Listener picListener = new PicWindow.Listener() {
+        @Override
+        public void toGallery() {
+            /*从相册选择*/
+            CropHelper.clearCachedCropFile(cropHandler.getCropParams().uri);
+            Intent intent1 = CropHelper.buildCropFromGalleryIntent(cropHandler.getCropParams());
+            startActivityForResult(intent1, CropHelper.REQUEST_CROP);
+        }
 
-    @Override
-    public void registSuccess() {
+        @Override
+        public void toCamera() {
+            /*从相机选择*/
+            CropHelper.clearCachedCropFile(cropHandler.getCropParams().uri);
+            Intent intent = CropHelper.buildCaptureIntent(cropHandler.getCropParams().uri);
+            startActivityForResult(intent, CropHelper.REQUEST_CAMERA);
+        }
+    };
 
-    }
 
-    @Override
-    public void registFailure() {
+    /*图片裁剪*/
+    private final CropHandler cropHandler = new CropHandler() {
+        @Override
+        public void onPhotoCropped(Uri uri) {
+            headFile = new File(uri.getPath());
+            user_head = BitmapFactory.decodeFile(headFile.getAbsolutePath());
+            iv_mine_photo.setImageBitmap(user_head);
+            presenter.onPutUserPhoto(uri.getPath(),myUser);
+            popup.dismiss();
+        }
 
-    }
+        @Override
+        public void onCropCancel() {
+        }
+
+        @Override
+        public void onCropFailed(String message) {
+        }
+
+        @Override
+        public CropParams getCropParams() {
+            CropParams cropParams = new CropParams();
+            cropParams.aspectX = 400;
+            cropParams.aspectY = 400;
+            return cropParams;
+        }
+
+        @Override
+        public Activity getContext() {
+            return getActivity();
+        }
+    };
+
+
 
     @Override
     public void onViewClick(int index) {
+        Intent intent;
         switch (index) {
             case 0x1001:
+                intent = new Intent();
+                intent.setClass(getActivity(), OrderActivity.class);
+                intent.putExtra(ORDER_TYPE, "order");
+                startActivity(intent);
                 break;
             case 0x1002:
+                intent = new Intent();
+                intent.setClass(getActivity(), OrderActivity.class);
+                intent.putExtra(ORDER_TYPE, "isPaid");
+                startActivity(intent);
                 break;
             case 0x1003:
+                intent = new Intent();
+                intent.setClass(getActivity(), OrderActivity.class);
+                intent.putExtra(ORDER_TYPE, "isUsed");
+                startActivity(intent);
                 break;
             case 0x1004:
+                intent = new Intent();
+                intent.setClass(getActivity(), OrderActivity.class);
+                intent.putExtra(ORDER_TYPE, "isComment");
+                startActivity(intent);
                 break;
             case 0x1005:
+                intent = new Intent();
+                intent.setClass(getActivity(), OrderActivity.class);
+                intent.putExtra(ORDER_TYPE, "isRefund");
+                startActivity(intent);
                 break;
             case 1:
                 break;
             case 2:
+                intent = new Intent();
+                intent.setClass(getActivity(), OrderActivity.class);
+                intent.putExtra(ORDER_TYPE, "isComment");
+                startActivity(intent);
                 break;
             case 3:
                 break;
@@ -163,4 +275,13 @@ public class MineFragment extends Fragment implements View.OnClickListener,Regis
         }
     }
 
+    @Override
+    public void getOrderSuccess(List<Order> orders) {
+
+    }
+
+    @Override
+    public void getOrderFailure() {
+
+    }
 }

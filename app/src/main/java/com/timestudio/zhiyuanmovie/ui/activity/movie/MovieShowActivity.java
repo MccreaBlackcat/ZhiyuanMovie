@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.timestudio.zhiyuanmovie.R;
 import com.timestudio.zhiyuanmovie.adapter.MovieShowAdapter;
 import com.timestudio.zhiyuanmovie.base.BaseActivity;
+import com.timestudio.zhiyuanmovie.bean.Movie;
 import com.timestudio.zhiyuanmovie.bean.MovieShow;
 import com.timestudio.zhiyuanmovie.bean.ShowDate;
 
@@ -42,7 +43,7 @@ public class MovieShowActivity extends BaseActivity implements MovieShowAdapter.
     private MovieShowPresenter presenter = new MovieShowPresenter();
     private List<MovieShow> movieShows;
     private List<ShowDate> showDates;
-    private String movieName;
+    private Movie movie;
     //记录 日期View 是否可以点击
     private boolean isShow1 = false;
     private boolean isShow2 = true;
@@ -52,7 +53,7 @@ public class MovieShowActivity extends BaseActivity implements MovieShowAdapter.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(setContent());
-        movieName = getIntent().getStringExtra("movieName");
+        movie = (Movie) getIntent().getSerializableExtra("movie");
         ButterKnife.bind(this);
         presenter.attachView(this);
         presenter.getShowDate();
@@ -93,10 +94,8 @@ public class MovieShowActivity extends BaseActivity implements MovieShowAdapter.
     public void onBuyClick(MovieShow show) {
         Intent intent = new Intent();
         intent.setClass(this, SelectSeatActivity.class);
-        intent.putExtra("movieName", show.getMovieName());
-        intent.putExtra("hall", show.getShowHall());
-        intent.putExtra("showDate", show.getShowDate());
-        intent.putExtra("showTime", show.getShowTime());
+        intent.putExtra("show", show);
+        intent.putExtra("movie", movie);
         startActivity(intent);
     }
 
@@ -122,7 +121,7 @@ public class MovieShowActivity extends BaseActivity implements MovieShowAdapter.
         tv_showDate_1.setText(showDates.get(0).getShowDate());
         tv_showDate_2.setText(showDates.get(1).getShowDate());
         tv_showDate_3.setText(showDates.get(2).getShowDate());
-        presenter.getMivieShowData(movieName,tv_showDate_1.getText().toString());
+        presenter.getMivieShowData(movie.getMovieName(),tv_showDate_1.getText().toString());
     }
 
     @Override
@@ -141,7 +140,7 @@ public class MovieShowActivity extends BaseActivity implements MovieShowAdapter.
                     tv_showDate_1_lines.setVisibility(View.VISIBLE);
                     tv_showDate_2_lines.setVisibility(View.GONE);
                     tv_showDate_3_lines.setVisibility(View.GONE);
-                    presenter.getMivieShowData(movieName,tv_showDate_1.getText().toString());
+                    presenter.getMivieShowData(movie.getMovieName(),tv_showDate_1.getText().toString());
                     isShow1 = false;
                     isShow2 = true;
                     isShow3 = true;
@@ -156,7 +155,7 @@ public class MovieShowActivity extends BaseActivity implements MovieShowAdapter.
                     tv_showDate_2_lines.setVisibility(View.VISIBLE);
                     tv_showDate_1_lines.setVisibility(View.GONE);
                     tv_showDate_3_lines.setVisibility(View.GONE);
-                    presenter.getMivieShowData(movieName,tv_showDate_2.getText().toString());
+                    presenter.getMivieShowData(movie.getMovieName(),tv_showDate_2.getText().toString());
                     isShow2 = false;
                     isShow1 = true;
                     isShow1 = true;
@@ -171,7 +170,7 @@ public class MovieShowActivity extends BaseActivity implements MovieShowAdapter.
                     tv_showDate_3_lines.setVisibility(View.VISIBLE);
                     tv_showDate_1_lines.setVisibility(View.GONE);
                     tv_showDate_2_lines.setVisibility(View.GONE);
-                    presenter.getMivieShowData(movieName,tv_showDate_3.getText().toString());
+                    presenter.getMivieShowData(movie.getMovieName(),tv_showDate_3.getText().toString());
                     isShow1 = true;
                     isShow3 = false;
                     isShow2 = true;

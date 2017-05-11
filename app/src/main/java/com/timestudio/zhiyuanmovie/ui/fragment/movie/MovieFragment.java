@@ -168,8 +168,7 @@ public class MovieFragment extends Fragment implements MovieView,MovieAdapter.On
     public void onItemClick(Movie movie) {
         //跳转到电影详情页面
         Intent intent = new Intent();
-        intent.putExtra("movieName",movie.getMovieName());
-        Log.i("shen", movie.getStatus());
+        intent.putExtra("movie",movie);
         intent.putExtra("status",movie.getStatus());
         intent.setClass(getActivity(), MovieDetailsActivity.class);
         startActivity(intent);
@@ -178,10 +177,9 @@ public class MovieFragment extends Fragment implements MovieView,MovieAdapter.On
     @Override
     public void onBuyClick(Movie movie) {
         //跳转到电影购买界面
-        Toast.makeText(getActivity(), "购买"+movie.getMovieName(), Toast.LENGTH_SHORT).show();
         Intent intent = new Intent();
         intent.setClass(getActivity(), MovieShowActivity.class);
-        intent.putExtra("movieName", movie.getMovieName());
+        intent.putExtra("movie", movie);
         startActivity(intent);
 
     }

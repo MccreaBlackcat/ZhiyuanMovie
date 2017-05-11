@@ -407,12 +407,12 @@ public class SeatTable extends View {
             }
             canvas.drawBitmap(overviewBitmap, 0, 0, null);
             drawOverview(canvas);
-            Log.d("drawTime", "OverviewDrawTime:" + (System.currentTimeMillis() - s));
+//            Log.d("drawTime", "OverviewDrawTime:" + (System.currentTimeMillis() - s));
         }
 
         if (DBG) {
             long drawTime = System.currentTimeMillis() - startTime;
-            Log.d("drawTime", "totalDrawTime:" + drawTime);
+//            Log.d("drawTime", "totalDrawTime:" + drawTime);
         }
     }
 
@@ -508,7 +508,7 @@ public class SeatTable extends View {
 
         float checkedSeatBitmapX = soldSeatBitmapY + seatSoldBitmap.getWidth() + spacing1 + txtWidth + spacing;
         tempMatrix.setScale(xScale1,yScale1);
-        tempMatrix.postTranslate(checkedSeatBitmapX,y);
+        tempMatrix.postTranslate(checkedSeatBitmapX,(headHeight - seatHeight) / 2);
         canvas.drawBitmap(checkedSeatBitmap, tempMatrix, headPaint);
         canvas.drawText("已选", checkedSeatBitmapX + spacing1 + seatWidth, txtY, headPaint);
 
@@ -588,7 +588,7 @@ public class SeatTable extends View {
                         break;
                     case SEAT_TYPE_SELECTED:
                         canvas.drawBitmap(checkedSeatBitmap, tempMatrix, paint);
-                        drawText(canvas, i, j, top, left);
+//                        drawText(canvas, i, j, top, left);
                         break;
                     case SEAT_TYPE_SOLD:
                         canvas.drawBitmap(seatSoldBitmap, tempMatrix, paint);
@@ -631,48 +631,48 @@ public class SeatTable extends View {
      * @param row
      * @param column
      */
-    private void drawText(Canvas canvas, int row, int column, float top, float left) {
-
-        String txt = (row + 1) + "排";
-        String txt1 = (column + 1) + "座";
-
-        if(seatChecker!=null){
-            String[] strings = seatChecker.checkedSeatTxt(row, column);
-            if(strings!=null&&strings.length>0){
-                if(strings.length>=2){
-                    txt=strings[0];
-                    txt1=strings[1];
-                }else {
-                    txt=strings[0];
-                    txt1=null;
-                }
-            }
-        }
-
-        TextPaint txtPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-        txtPaint.setColor(txt_color);
-        txtPaint.setTypeface(Typeface.DEFAULT_BOLD);
-        float seatHeight = this.seatHeight * getMatrixScaleX();
-        float seatWidth = this.seatWidth * getMatrixScaleX();
-        txtPaint.setTextSize(seatHeight / 3);
-
-        //获取中间线
-        float center = seatHeight / 2;
-        float txtWidth = txtPaint.measureText(txt);
-        float startX = left + seatWidth / 2 - txtWidth / 2;
-
-        //只绘制一行文字
-        if(txt1==null){
-            canvas.drawText(txt, startX, getBaseLine(txtPaint, top, top + seatHeight), txtPaint);
-        }else {
-            canvas.drawText(txt, startX, getBaseLine(txtPaint, top, top + center), txtPaint);
-            canvas.drawText(txt1, startX, getBaseLine(txtPaint, top + center, top + center + seatHeight / 2), txtPaint);
-        }
-
-        if (DBG) {
-            Log.d("drawTest:", "top:" + top);
-        }
-    }
+//    private void drawText(Canvas canvas, int row, int column, float top, float left) {
+//
+//        String txt = (row + 1) + "排";
+//        String txt1 = (column + 1) + "座";
+//
+//        if(seatChecker!=null){
+//            String[] strings = seatChecker.checkedSeatTxt(row, column);
+//            if(strings!=null&&strings.length>0){
+//                if(strings.length>=2){
+//                    txt=strings[0];
+//                    txt1=strings[1];
+//                }else {
+//                    txt=strings[0];
+//                    txt1=null;
+//                }
+//            }
+//        }
+//
+//        TextPaint txtPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+//        txtPaint.setColor(txt_color);
+//        txtPaint.setTypeface(Typeface.DEFAULT_BOLD);
+//        float seatHeight = this.seatHeight * getMatrixScaleX();
+//        float seatWidth = this.seatWidth * getMatrixScaleX();
+//        txtPaint.setTextSize(seatHeight / 3);
+//
+//        //获取中间线
+//        float center = seatHeight / 2;
+//        float txtWidth = txtPaint.measureText(txt);
+//        float startX = left + seatWidth / 2 - txtWidth / 2;
+//
+//        //只绘制一行文字
+//        if(txt1==null){
+//            canvas.drawText(txt, startX, getBaseLine(txtPaint, top, top + seatHeight), txtPaint);
+//        }else {
+//            canvas.drawText(txt, startX, getBaseLine(txtPaint, top, top + center), txtPaint);
+//            canvas.drawText(txt1, startX, getBaseLine(txtPaint, top + center, top + center + seatHeight / 2), txtPaint);
+//        }
+//
+//        if (DBG) {
+//            Log.d("drawTest:", "top:" + top);
+//        }
+//    }
 
     int bacColor = Color.parseColor("#7e000000");
 
@@ -1164,7 +1164,7 @@ public class SeatTable extends View {
          * @param column
          * @return 返回2个元素的数组,第一个元素是第一行的文字,第二个元素是第二行文字,如果只返回一个元素则会绘制到座位图的中间位置
          */
-        String[] checkedSeatTxt(int row, int column);
+//        String[] checkedSeatTxt(int row, int column);
 
     }
 

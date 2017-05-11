@@ -42,6 +42,7 @@ public class ShopFragment extends Fragment implements ShopView,View.OnClickListe
     private List<Shop> mData;
     private List<ShopOrder> mShopOrder = new ArrayList<ShopOrder>();
     private ShopAdapter adapter;
+    private Shop mshop;
     private int priceTotal = 0;
 
     public ShopFragment() {
@@ -72,6 +73,7 @@ public class ShopFragment extends Fragment implements ShopView,View.OnClickListe
         adapter.setListener(new ShopAdapter.OnAddsubClickListener() {
             @Override
             public void onButtonClick(String tag,Shop shop,int num) {
+                mshop = shop;
                 //判断回调传过来的是 + 还是 - 的标记
                 if (tag.equals("add")) {
                     priceTotal += shop.getPrice();
@@ -197,7 +199,7 @@ public class ShopFragment extends Fragment implements ShopView,View.OnClickListe
         if (bmobUser == null) {
             Toast.makeText(getActivity(), "请先登录", Toast.LENGTH_SHORT).show();
         } else {
-            presenter.submitTotal(priceTotal,mShopOrder,bmobUser.getObjectId());
+            presenter.submitTotal(priceTotal,mShopOrder,bmobUser.getObjectId(),mshop);
         }
         //测试
 //        presenter.submitTotal(priceTotal,mShopOrder,"a78bb4bf5e");

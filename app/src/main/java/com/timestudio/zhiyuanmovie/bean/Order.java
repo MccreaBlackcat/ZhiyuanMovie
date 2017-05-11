@@ -12,11 +12,20 @@ public class Order extends BmobObject {
     private String userId;
     private String orderType;
     private String orderName;
+    private String photo;
     private boolean isUsed;
     private boolean isRefund;
     private boolean isPaid;
     private boolean isComment;
     private int totalPrice;
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
 
     public int getTotalPrice() {
         return totalPrice;

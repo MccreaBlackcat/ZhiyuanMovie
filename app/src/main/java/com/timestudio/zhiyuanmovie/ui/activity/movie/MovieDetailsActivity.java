@@ -14,6 +14,7 @@ import com.timestudio.zhiyuanmovie.R;
 import com.timestudio.zhiyuanmovie.adapter.MovieDetailsAdapter;
 import com.timestudio.zhiyuanmovie.base.BaseActivity;
 import com.timestudio.zhiyuanmovie.bean.Comment;
+import com.timestudio.zhiyuanmovie.bean.Movie;
 import com.timestudio.zhiyuanmovie.bean.MovieDetails;
 import com.timestudio.zhiyuanmovie.bean.MovieShow;
 
@@ -35,6 +36,7 @@ public class MovieDetailsActivity extends BaseActivity implements MovieDetailsVi
     Button btn_buyTicket;
 
     private String movieName;
+    private Movie movie;
     private String status;
     private int mDistanceY;
     private List<Comment> mComments;  //评论数据
@@ -46,8 +48,13 @@ public class MovieDetailsActivity extends BaseActivity implements MovieDetailsVi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(setContent());
-        movieName = getIntent().getStringExtra("movieName");
+        movie = (Movie) getIntent().getSerializableExtra("movie");
         status = getIntent().getStringExtra("status");
+        if (movie != null) {
+            movieName = movie.getMovieName();
+        } else {
+            movieName = getIntent().getStringExtra("movieName");
+        }
         adapter = new MovieDetailsAdapter();
         presenter = new MovieDetailsPresenter();
         presenter.attachView(this);
@@ -157,6 +164,7 @@ public class MovieDetailsActivity extends BaseActivity implements MovieDetailsVi
         Intent intent = new Intent();
         intent.setClass(this, MovieShowActivity.class);
         intent.putExtra("movieName", movieName);
+        intent.putExtra("movie", movie);
         startActivity(intent);
     }
 }

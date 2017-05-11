@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.timestudio.zhiyuanmovie">
 
     <!-- 允许联网 -->
@@ -15,13 +16,28 @@
     <!-- 允许读取手机状态 用于创建BmobInstallation -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
+    <!-- SD卡读写权限 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:name=".utils.ZhiyuanApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:replace="android:icon">
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.timestudio.zhiyuanmovie"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
         <activity android:name=".ui.activity.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,7 +55,10 @@
         <activity android:name=".ui.activity.find.FileAdvisoryActivity" />
         <activity android:name=".ui.activity.movie.MovieDetailsActivity" />
         <activity android:name=".ui.activity.movie.MovieShowActivity" />
-        <activity android:name=".ui.activity.movie.SelectSeatActivity"></activity>
+        <activity android:name=".ui.activity.movie.SelectSeatActivity" />
+        <activity android:name=".ui.activity.movie.TicketActivity" />
+        <activity android:name=".ui.activity.mine.OrderActivity" />
+        <activity android:name=".ui.activity.mine.QuestionActivity"></activity>
     </application>
 
 </manifest>

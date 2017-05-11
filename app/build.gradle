@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "com.timestudio.zhiyuanmovie"
-        minSdkVersion 21
+        minSdkVersion 17
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -43,6 +43,7 @@ dependencies {
     compile 'in.srain.cube:ptr-load-more:1.0.2'
     compile 'com.jude:rollviewpager:1.4.6'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
+    compile 'org.hybridsquad.android.photocropper:library:2.1.0'
     testCompile 'junit:junit:4.12'
 
 

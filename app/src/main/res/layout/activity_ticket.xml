@@ -81,6 +81,14 @@
             android:textSize="@dimen/sp_15"
             />
         <TextView
+            android:id="@+id/tv_ticket_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp_5"
+            android:text="@string/orderId"
+            android:textSize="@dimen/sp_15"
+            />
+        <TextView
             android:id="@+id/tv_ticket_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

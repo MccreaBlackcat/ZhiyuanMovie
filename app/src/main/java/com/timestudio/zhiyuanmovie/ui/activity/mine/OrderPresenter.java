@@ -11,6 +11,7 @@ import java.util.List;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * Created by strongShen on 2017/5/10.
@@ -68,6 +69,9 @@ public class OrderPresenter extends BasePresenter<OrderView>{
             query.addWhereEqualTo("orderType", "movie");
             query.addWhereEqualTo("isUsed", true);
         }
+        if (orderType.equals("isUsed")) {
+            query.addWhereEqualTo("isPaid", true);
+        }
         query.findObjects(new FindListener<Order>() {
             @Override
             public void done(List<Order> list, BmobException e) {
@@ -78,6 +82,24 @@ public class OrderPresenter extends BasePresenter<OrderView>{
                 }
             }
         });
+    }
+    /**
+     * 消费订单，更新服务器
+     * */
+    public void onUsedUpdateOrder(Order order) {
+        order.setUsed(true);
+        order.update(new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e == null) {
+                    getView().onUseSuccess();
+                } else {
+                    Log.i("bmob", "消费失败，msg" + e.toString());
+                }
+
+            }
+        });
+
     }
 
     @NonNull

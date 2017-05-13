@@ -34,6 +34,8 @@ public class TicketActivity extends BaseActivity implements TicketView{
     TextView tv_ticket_totalPrice;
     @Bind(R.id.tv_ticket_time)
     TextView tv_ticket_time;
+    @Bind(R.id.tv_ticket_id)
+    TextView tv_ticket_id;
     @Bind(R.id.btn_buyTicketSure)
     Button btn_buyTicketSure;
     @Bind(R.id.ticket_toolbar)
@@ -92,6 +94,7 @@ public class TicketActivity extends BaseActivity implements TicketView{
         tv_ticket_number.setText("数量：" + ticket.getAmount() + " 张");
         tv_ticket_totalPrice.setText("总额：" + ticket.getTotalPrice() + " 元");
         tv_ticket_time.setText("下单时间：" + ticket.getCreatedAt());
+        tv_ticket_id.setText("订单号：" + orderId);
         if (mOrder != null && mOrder.isPaid() == true) {
             btn_buyTicketSure.setVisibility(View.GONE);
         } else {

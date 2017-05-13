@@ -12,18 +12,15 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.timestudio.zhiyuanmovie.R;
 import com.timestudio.zhiyuanmovie.bean.Order;
-import com.timestudio.zhiyuanmovie.bean.Ticket;
 import com.timestudio.zhiyuanmovie.utils.ImageLoadOptions;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.bmob.v3.BmobObject;
 
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 
 /**
- * Created by hasee on 2017/5/10.
+ * Created by strongShrn on 2017/5/10.
  */
 
 public class OrderAdapter extends BaseAdapter {
@@ -31,6 +28,12 @@ public class OrderAdapter extends BaseAdapter {
     private List<Order> orders = new ArrayList<>();
     private LayoutInflater inflater;
     private String orderType;
+    //isUsed isPaid isRefund isComment
+    private String IS_USED = "isUsed";
+    private String IS_PAID = "isPaid";
+    private String IS_COMMENT = "isComment";
+    private String IS_REFUND = "isRefund";
+    private String ORDER = "order";
 
     public OrderAdapter(Context context,String orderType) {
         inflater = LayoutInflater.from(context);
@@ -58,7 +61,7 @@ public class OrderAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(final int i, View view, ViewGroup viewGroup) {
         MyHolder holder;
         if (view == null) {
             view = inflater.inflate(R.layout.item_order_mine, null);
@@ -86,20 +89,37 @@ public class OrderAdapter extends BaseAdapter {
         //isUsed isPaid isRefund isComment
         switch (orderType) {
             case "order":
-
                 break;
             case "isPaid":
                 holder.btn_order_button.setVisibility(View.VISIBLE);
                 holder.btn_order_button.setText("付款");
+                holder.btn_order_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        listener.onBtnClick(i,IS_PAID);
+                    }
+                });
                 break;
             case "isUsed":
                 holder.btn_order_button.setVisibility(View.VISIBLE);
                 holder.btn_order_button.setText("消费");
+                holder.btn_order_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        listener.onBtnClick(i,IS_USED);
+                    }
+                });
                 break;
             case "isComment":
                 if (orders.get(i).getOrderType().equals("movie")) {
                     holder.btn_order_button.setVisibility(View.VISIBLE);
                     holder.btn_order_button.setText("评论");
+                    holder.btn_order_button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            listener.onBtnClick(i,IS_COMMENT);
+                        }
+                    });
                 } else if (orders.get(i).getOrderType().equals("shop")) {
                 }
                 break;
@@ -120,4 +140,15 @@ public class OrderAdapter extends BaseAdapter {
         TextView tv_order_time;
         Button btn_order_button;
     }
+
+    private OnButtonClickListener listener;
+
+    public void setListener(OnButtonClickListener listener) {
+        this.listener = listener;
+    }
+
+    public interface OnButtonClickListener {
+        void onBtnClick(int position,String orderType);
+    }
+
 }

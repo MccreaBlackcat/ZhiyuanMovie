@@ -89,4 +89,5 @@
     <string name="orderName">订单名称</string>
     <string name="button">按钮</string>
     <string name="contact">联系客服</string>
+    <string name="putComment">发表评论</string>
 </resources>

@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.timestudio.zhiyuanmovie.R;
 import com.timestudio.zhiyuanmovie.adapter.OrderAdapter;
@@ -21,7 +22,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class OrderActivity extends BaseActivity implements OrderView{
+public class OrderActivity extends BaseActivity implements OrderView,OrderAdapter.OnButtonClickListener{
 
     @Bind(R.id.lv_order)
     ListView lv_order;
@@ -37,37 +38,9 @@ public class OrderActivity extends BaseActivity implements OrderView{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(setContent());
-        orderType = getIntent().getStringExtra("orderType");
-        ButterKnife.bind(this);
-        presenter.attachView(this);
-        setSupportActionBar(mine_order_toolbar);
-        //isPaid isUsed isComment  isRefund
-        switch (orderType) {
-            case "order":
-                getSupportActionBar().setTitle("总订单");
-                break;
-            case "isPaid":
-                getSupportActionBar().setTitle("待付款");
-                break;
-            case "isUsed":
-                getSupportActionBar().setTitle("待消费");
-                break;
-            case "isComment":
-                getSupportActionBar().setTitle("未评论");
-                break;
-            case "isRefund":
-                getSupportActionBar().setTitle("退款");
-                break;
-        }
 
-        mine_order_toolbar.setNavigationIcon(R.drawable.back);
-        mine_order_toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-        adapter = new OrderAdapter(this,orderType);
+        initView();
+        initListener();
         initData();
 
     }
@@ -114,12 +87,42 @@ public class OrderActivity extends BaseActivity implements OrderView{
 
     @Override
     protected void initView() {
+        orderType = getIntent().getStringExtra("orderType");
+        ButterKnife.bind(this);
+        presenter.attachView(this);
+        setSupportActionBar(mine_order_toolbar);
+        //isPaid isUsed isComment  isRefund
+        switch (orderType) {
+            case "order":
+                getSupportActionBar().setTitle("总订单");
+                break;
+            case "isPaid":
+                getSupportActionBar().setTitle("待付款");
+                break;
+            case "isUsed":
+                getSupportActionBar().setTitle("待消费");
+                break;
+            case "isComment":
+                getSupportActionBar().setTitle("未评论");
+                break;
+            case "isRefund":
+                getSupportActionBar().setTitle("退款");
+                break;
+        }
 
+        mine_order_toolbar.setNavigationIcon(R.drawable.back);
+        mine_order_toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+        adapter = new OrderAdapter(this,orderType);
     }
 
     @Override
     protected void initListener() {
-
+        adapter.setListener(this);
     }
 
     @Override
@@ -139,5 +142,38 @@ public class OrderActivity extends BaseActivity implements OrderView{
     @Override
     public void getOrderFailure() {
 
+    }
+
+    @Override
+    public void onUseSuccess() {
+        Toast.makeText(this,"消费成功",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onBtnClick(int position, String orderType) {
+        Intent intent;
+        if (mOrders.get(position).getOrderType().equals("movie")) {
+            if (orderType.equals("isComment")) {
+                //跳转到评论界面
+                intent = new Intent();
+                intent.setClass(this, CommentActivity.class);
+                intent.putExtra("order", mOrders.get(position));
+                startActivity(intent);
+            } else if (orderType.equals("isUsed")) {
+                //更新数据库数据
+                presenter.onUsedUpdateOrder(mOrders.get(position));
+            } else {
+                intent = new Intent();
+                intent.setClass(OrderActivity.this, TicketActivity.class);
+                intent.putExtra("order", mOrders.get(position));
+                startActivity(intent);
+            }
+
+        } else if (mOrders.get(position).getOrderType().equals("shop")) {
+            intent = new Intent();
+            intent.setClass(OrderActivity.this, ShopOrderActivity.class);
+            intent.putExtra("orderId", mOrders.get(position).getObjectId());
+            startActivity(intent);
+        }
     }
 }

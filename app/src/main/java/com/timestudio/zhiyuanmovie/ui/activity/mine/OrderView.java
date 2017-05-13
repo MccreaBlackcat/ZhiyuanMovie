@@ -25,6 +25,12 @@ public interface OrderView  extends BaseMvpView{
      * */
     void getOrderFailure();
 
+    /**
+     * 消费成功
+     */
+    void onUseSuccess();
+
+
     OrderView NULL = new OrderView() {
         @Override
         public void getAllOrderSuccess(List<Order> orders) {
@@ -38,6 +44,11 @@ public interface OrderView  extends BaseMvpView{
 
         @Override
         public void getOrderFailure() {
+
+        }
+
+        @Override
+        public void onUseSuccess() {
 
         }
     };

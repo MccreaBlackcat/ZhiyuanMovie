@@ -21,6 +21,7 @@ import com.timestudio.zhiyuanmovie.adapter.MineAdapter;
 import com.timestudio.zhiyuanmovie.bean.MyUser;
 import com.timestudio.zhiyuanmovie.bean.Order;
 import com.timestudio.zhiyuanmovie.ui.activity.mine.OrderActivity;
+import com.timestudio.zhiyuanmovie.ui.activity.mine.QuestionActivity;
 import com.timestudio.zhiyuanmovie.ui.activity.user.login.LoginActivity;
 import com.timestudio.zhiyuanmovie.utils.ImageLoadOptions;
 import com.timestudio.zhiyuanmovie.widget.PicWindow;
@@ -264,6 +265,9 @@ public class MineFragment extends Fragment implements View.OnClickListener,MineV
                 startActivity(intent);
                 break;
             case 3:
+                intent = new Intent();
+                intent.setClass(getActivity(), QuestionActivity.class);
+                startActivity(intent);
                 break;
             case 4:
                 BmobUser.logOut();

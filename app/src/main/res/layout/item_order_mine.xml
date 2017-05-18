@@ -49,6 +49,14 @@
             android:visibility="gone"
             android:background="@drawable/btn_sel_getverification"
             />
+        <CheckBox
+            android:id="@+id/cb_order_checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:clickable="false"
+            android:padding="@dimen/dp_5"
+            android:visibility="gone" />
     </LinearLayout>
 
 </LinearLayout>

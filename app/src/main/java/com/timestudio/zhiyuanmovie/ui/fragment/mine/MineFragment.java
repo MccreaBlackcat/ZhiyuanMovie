@@ -20,10 +20,13 @@ import com.timestudio.zhiyuanmovie.R;
 import com.timestudio.zhiyuanmovie.adapter.MineAdapter;
 import com.timestudio.zhiyuanmovie.bean.MyUser;
 import com.timestudio.zhiyuanmovie.bean.Order;
+import com.timestudio.zhiyuanmovie.ui.activity.mine.MineVipActivity;
 import com.timestudio.zhiyuanmovie.ui.activity.mine.OrderActivity;
 import com.timestudio.zhiyuanmovie.ui.activity.mine.QuestionActivity;
+import com.timestudio.zhiyuanmovie.ui.activity.mine.SettingActivity;
 import com.timestudio.zhiyuanmovie.ui.activity.user.login.LoginActivity;
 import com.timestudio.zhiyuanmovie.utils.ImageLoadOptions;
+import com.timestudio.zhiyuanmovie.utils.VipManager;
 import com.timestudio.zhiyuanmovie.widget.PicWindow;
 
 import org.hybridsquad.android.library.CropHandler;
@@ -56,7 +59,6 @@ public class MineFragment extends Fragment implements View.OnClickListener,MineV
     TextView tv_vip_name;
 
     MyUser myUser = BmobUser.getCurrentUser(MyUser.class);
-    private String[] vipLvlName = {"普通用户","V1 黄铜会员","V2 白银会员","V3 黄金会员","V4 白金会员","V5 钻石会员","V6 黑钻会员"};
 
     private File headFile;
     private Bitmap user_head;
@@ -103,10 +105,13 @@ public class MineFragment extends Fragment implements View.OnClickListener,MineV
         rv_mine.setAdapter(mineAdapter);
         if (myUser != null) {
             tv_user_name.setText(myUser.getUsername());
-            tv_vip_name.setText(vipLvlName[Integer.parseInt(myUser.getVipLvl())]);
-            ImageLoader.getInstance().displayImage(myUser.getPhoto().getUrl(),
-                    iv_mine_photo,
-                    ImageLoadOptions.build_item());
+            tv_vip_name.setText(VipManager.getInstance().getVipName(myUser.getVipIntegral()));
+            if ((myUser.getPhoto()!= null)) {
+                ImageLoader.getInstance().displayImage(myUser.getPhoto().getUrl(),
+                        iv_mine_photo,
+                        ImageLoadOptions.build_item());
+            }
+
         }
         mineAdapter.setOnClickListener(this);
         return view;
@@ -149,22 +154,32 @@ public class MineFragment extends Fragment implements View.OnClickListener,MineV
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (data != null) {
-            if (requestCode == 0x001) {
-                //登录成功后，更新用户UI
-                myUser = BmobUser.getCurrentUser(MyUser.class);
-                tv_user_name.setText(myUser.getUsername());
-                int vip = Integer.parseInt(myUser.getVipLvl());
-                tv_vip_name.setText(vipLvlName[vip]);
+        if (requestCode == 0x001) {
+            //登录成功后，更新用户UI
+            myUser = BmobUser.getCurrentUser(MyUser.class);
+            tv_user_name.setText(myUser.getUsername());
+            tv_vip_name.setText(VipManager.getInstance().getVipName(myUser.getVipIntegral()));
+            if (myUser.getPhoto() != null) {
                 ImageLoader.getInstance().displayImage(myUser.getPhoto().getUrl(),
                         iv_mine_photo,
                         ImageLoadOptions.build_item());
-                //获取订单数据
-
-            } else if (requestCode == CropHelper.REQUEST_CROP || requestCode == CropHelper.REQUEST_CAMERA) {
-                // 帮助我们去处理结果(剪切完的图像)
-                CropHelper.handleResult(cropHandler, requestCode, resultCode, data);
             }
+            //获取订单数据
+
+        } else if (requestCode == CropHelper.REQUEST_CROP || requestCode == CropHelper.REQUEST_CAMERA) {
+            // 帮助我们去处理结果(剪切完的图像)
+            CropHelper.handleResult(cropHandler, requestCode, resultCode, data);
+        } else if (requestCode == 0x002) {
+            //设置中 改变了信息，更新到UI
+            myUser = BmobUser.getCurrentUser(MyUser.class);
+            if (myUser == null) {
+                tv_user_name.setText("立即登录");
+                tv_vip_name.setText("会员等级");
+            } else {
+                tv_user_name.setText(myUser.getUsername());
+                tv_vip_name.setText(VipManager.getInstance().getVipName(myUser.getVipIntegral()));
+            }
+
         }
     }
     //popupWindow的监听
@@ -257,6 +272,9 @@ public class MineFragment extends Fragment implements View.OnClickListener,MineV
                 startActivity(intent);
                 break;
             case 1:
+                intent = new Intent();
+                intent.setClass(getActivity(), MineVipActivity.class);
+                startActivity(intent);
                 break;
             case 2:
                 intent = new Intent();
@@ -270,10 +288,9 @@ public class MineFragment extends Fragment implements View.OnClickListener,MineV
                 startActivity(intent);
                 break;
             case 4:
-                BmobUser.logOut();
-                myUser = BmobUser.getCurrentUser(MyUser.class);
-                tv_user_name.setText("立即登录");
-                tv_vip_name.setText("会员等级");
+                intent = new Intent();
+                intent.setClass(getActivity(), SettingActivity.class);
+                startActivityForResult(intent,0x002);
                 break;
 
         }

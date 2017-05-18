@@ -30,6 +30,10 @@ public interface OrderView  extends BaseMvpView{
      */
     void onUseSuccess();
 
+    /**
+     * 删除订单成功*/
+    void onDeletedSuccess();
+
 
     OrderView NULL = new OrderView() {
         @Override
@@ -49,6 +53,11 @@ public interface OrderView  extends BaseMvpView{
 
         @Override
         public void onUseSuccess() {
+
+        }
+
+        @Override
+        public void onDeletedSuccess() {
 
         }
     };

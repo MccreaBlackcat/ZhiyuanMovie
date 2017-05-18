@@ -1,6 +1,5 @@
 package com.timestudio.zhiyuanmovie.bean;
 
-import android.graphics.Bitmap;
 
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
@@ -14,15 +13,7 @@ public class MyUser extends BmobUser {
 
     private int vipIntegral; //会员积分
     private BmobFile photo; //用户头像
-    private String vipLvl;
 
-    public String getVipLvl() {
-        return vipLvl;
-    }
-
-    public void setVipLvl(String vipLvl) {
-        this.vipLvl = vipLvl;
-    }
 
     public BmobFile getPhoto() {
         return photo;

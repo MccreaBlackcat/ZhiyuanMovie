@@ -6,7 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -34,6 +36,9 @@ public class OrderAdapter extends BaseAdapter {
     private String IS_COMMENT = "isComment";
     private String IS_REFUND = "isRefund";
     private String ORDER = "order";
+    private ArrayList<Boolean> isChecks = new ArrayList<>();
+    private boolean isCheck = false;
+    private int count;
 
     public OrderAdapter(Context context,String orderType) {
         inflater = LayoutInflater.from(context);
@@ -42,6 +47,43 @@ public class OrderAdapter extends BaseAdapter {
 
     public void setOrders(List<Order> orders) {
         this.orders = orders;
+        //记录可选数据
+        for (int i = 0; i < orders.size(); i++) {
+            isChecks.add(false);
+        }
+    }
+
+    public ArrayList<Boolean> getIsChecks() {
+        return isChecks;
+    }
+
+    public void setCheckBoxVisible() {
+        isCheck = true;
+        notifyDataSetChanged();
+    }
+    public void setCheckBoxGone() {
+        isCheck = false;
+        cancelSelectAll();
+    }
+
+    public void setSelectAll() {
+        isChecks.clear();
+        for (int i = 0; i < orders.size(); i++) {
+            isChecks.add(i, true);
+        }
+        count = orders.size();
+        listener.onCheckChangeCount(count);
+        notifyDataSetChanged();
+    }
+
+    public void cancelSelectAll() {
+        isChecks.clear();
+        for (int i = 0; i < orders.size(); i++) {
+            isChecks.add(i, false);
+        }
+        count = 0;
+        listener.onCheckChangeCount(count);
+        notifyDataSetChanged();
     }
 
 
@@ -70,6 +112,8 @@ public class OrderAdapter extends BaseAdapter {
             holder.tv_order_name = (TextView) view.findViewById(R.id.tv_order_name);
             holder.tv_order_time = (TextView) view.findViewById(R.id.tv_order_time);
             holder.btn_order_button = (Button) view.findViewById(R.id.btn_order_button);
+            holder.ll_order_details = (LinearLayout) view.findViewById(R.id.ll_order_details);
+            holder.cb_order_checkBox = (CheckBox) view.findViewById(R.id.cb_order_checkBox);
             view.setTag(holder);
         } else {
             holder = (MyHolder) view.getTag();
@@ -129,6 +173,37 @@ public class OrderAdapter extends BaseAdapter {
                 break;
 
         }
+        holder.ll_order_details.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                //长按控件后，将checkBox显示出来
+                listener.onLayoutLongClick(i);
+                return true;
+            }
+        });
+        if (isCheck) {
+            holder.cb_order_checkBox.setVisibility(View.VISIBLE);
+        } else {
+            holder.cb_order_checkBox.setVisibility(View.GONE);
+        }
+        holder.cb_order_checkBox.setChecked(isChecks.get(i));
+        holder.cb_order_checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isChecks.get(i)) {
+                    isChecks.set(i, false);
+                    count -= 1;
+                    listener.onCheckChangeCount(count);
+
+                } else {
+//                    Log.i("shen", isChecked + "");
+                    isChecks.set(i, true);
+                    count += 1;
+                    listener.onCheckChangeCount(count);
+
+                }
+            }
+        });
 
         return view;
     }
@@ -139,16 +214,22 @@ public class OrderAdapter extends BaseAdapter {
         TextView tv_order_name;
         TextView tv_order_time;
         Button btn_order_button;
+        LinearLayout ll_order_details;
+        CheckBox cb_order_checkBox;
+
     }
 
-    private OnButtonClickListener listener;
+    private OnClickListener listener;
 
-    public void setListener(OnButtonClickListener listener) {
+    public void setListener(OnClickListener listener) {
         this.listener = listener;
     }
 
-    public interface OnButtonClickListener {
+    public interface OnClickListener {
         void onBtnClick(int position,String orderType);
+        void onLayoutLongClick(int position);
+        void onCheckChangeCount(int count);
+
     }
 
 }

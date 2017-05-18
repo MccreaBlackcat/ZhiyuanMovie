@@ -5,14 +5,15 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.timestudio.zhiyuanmovie.R;
 import com.timestudio.zhiyuanmovie.adapter.OrderAdapter;
 import com.timestudio.zhiyuanmovie.base.BaseActivity;
 import com.timestudio.zhiyuanmovie.bean.Order;
-import com.timestudio.zhiyuanmovie.bean.Ticket;
 import com.timestudio.zhiyuanmovie.ui.activity.movie.TicketActivity;
 import com.timestudio.zhiyuanmovie.ui.activity.shop.ShopOrderActivity;
 
@@ -21,13 +22,22 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class OrderActivity extends BaseActivity implements OrderView,OrderAdapter.OnButtonClickListener{
+public class OrderActivity extends BaseActivity implements OrderView,OrderAdapter.OnClickListener,View.OnClickListener {
 
     @Bind(R.id.lv_order)
     ListView lv_order;
     @Bind(R.id.mine_order_toolbar)
     Toolbar mine_order_toolbar;
+    @Bind(R.id.ll_order_deleted)
+    LinearLayout ll_order_deleted;
+    @Bind(R.id.tv_order_allSelect)
+    TextView tv_order_allSelect;
+    @Bind(R.id.tv_order_deleted)
+    TextView tv_order_deleted;
+    @Bind(R.id.tv_deleted_cancel)
+    TextView tv_deleted_cancel;
 
     private String orderType;
     private OrderAdapter adapter;
@@ -150,6 +160,11 @@ public class OrderActivity extends BaseActivity implements OrderView,OrderAdapte
     }
 
     @Override
+    public void onDeletedSuccess() {
+        Toast.makeText(this,"删除成功",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public void onBtnClick(int position, String orderType) {
         Intent intent;
         if (mOrders.get(position).getOrderType().equals("movie")) {
@@ -174,6 +189,46 @@ public class OrderActivity extends BaseActivity implements OrderView,OrderAdapte
             intent.setClass(OrderActivity.this, ShopOrderActivity.class);
             intent.putExtra("orderId", mOrders.get(position).getObjectId());
             startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onLayoutLongClick(int position) {
+        //显示控件
+        tv_deleted_cancel.setVisibility(View.VISIBLE);
+        ll_order_deleted.setVisibility(View.VISIBLE);
+        adapter.setCheckBoxVisible();
+    }
+
+    @Override
+    public void onCheckChangeCount(int count) {
+        if (count == 0) {
+            tv_order_deleted.setText("删除");
+        } else {
+            tv_order_deleted.setText("删除(" + count + ")");
+        }
+
+    }
+
+    @OnClick({R.id.tv_order_allSelect,R.id.tv_order_deleted,R.id.tv_deleted_cancel})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.tv_order_allSelect:
+                //全选
+                adapter.setSelectAll();
+//                adapter.notifyDataSetChanged();
+                break;
+            case R.id.tv_order_deleted:
+                //删除
+                ArrayList<Boolean> booleens = adapter.getIsChecks();
+                presenter.onDeletedOrder(booleens,mOrders);
+                break;
+            case R.id.tv_deleted_cancel:
+                //取消,隐藏控件
+                adapter.setCheckBoxGone();
+                tv_deleted_cancel.setVisibility(View.GONE);
+                ll_order_deleted.setVisibility(View.GONE);
+                break;
         }
     }
 }

@@ -58,10 +58,11 @@ public class RegistPresenter extends BasePresenter<RegistView> {
      * 验证完毕，注册号码，向服务器添加数据
      */
     public void userRegistered(final String nickname, String phoneNumber, String password) {
-        BmobUser bmobuser = new BmobUser();
+        MyUser bmobuser = new MyUser();
         bmobuser.setUsername(nickname);
         bmobuser.setMobilePhoneNumber(phoneNumber);
         bmobuser.setPassword(password);
+        bmobuser.setVipIntegral(0);
         bmobuser.signUp(new SaveListener<MyUser>() {
             @Override
             public void done(MyUser myUser, BmobException e) {

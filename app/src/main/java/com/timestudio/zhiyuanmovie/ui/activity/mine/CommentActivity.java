@@ -105,7 +105,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     @OnClick(R.id.btn_putComment)
     public void onClick(View view) {
         //发布评论
-        if (commentStr != "") {
+        if (!commentStr.equals("")) {
             MyUser myUser = BmobUser.getCurrentUser(MyUser.class);
             presenter.onPutComment(commentStr, myUser, mOrder);
         } else {

@@ -90,4 +90,18 @@
     <string name="button">按钮</string>
     <string name="contact">联系客服</string>
     <string name="putComment">发表评论</string>
+    <string name="login_out">退出登录</string>
+    <string name="version">当前版本</string>
+    <string name="version_num">1.0</string>
+    <string name="registeredTime">注册时间</string>
+    <string name="rename">修改昵称</string>
+    <string name="repass">修改密码</string>
+    <string name="nickName">昵称:</string>
+    <string name="oldPassWord">旧密码:</string>
+    <string name="newPassWord">新密码:</string>
+    <string name="put_oldPassWord">请输入旧密码</string>
+    <string name="put_newPassWord">请输入新的密码</string>
+    <string name="mineJF">我的积分:</string>
+    <string name="allSelect">全选</string>
+    <string name="deletedOrder">删除</string>
 </resources>

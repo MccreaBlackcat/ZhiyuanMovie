@@ -5,9 +5,14 @@ import android.util.Log;
 
 import com.timestudio.zhiyuanmovie.base.BasePresenter;
 import com.timestudio.zhiyuanmovie.bean.Order;
+import com.timestudio.zhiyuanmovie.bean.ShopOrder;
+import com.timestudio.zhiyuanmovie.bean.Ticket;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import cn.bmob.v3.BmobBatch;
+import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
@@ -100,6 +105,57 @@ public class OrderPresenter extends BasePresenter<OrderView>{
             }
         });
 
+    }
+
+    /**
+     * 删除订单
+     */
+    public void onDeletedOrder(final ArrayList<Boolean> booleens, final List<Order> orders) {
+        for (int i = 0; i < booleens.size(); i++) {
+            if (booleens.get(i)) {
+                final int finalI = i;
+                if (orders.get(i).getOrderType().equals("movie")) {
+                    BmobQuery<Ticket> ticketBmobQuery = new BmobQuery<>();
+                    ticketBmobQuery.addWhereEqualTo("orderId", orders.get(i).getObjectId());
+                    ticketBmobQuery.findObjects(new FindListener<Ticket>() {
+                        @Override
+                        public void done(List<Ticket> tickets, BmobException e) {
+                            if (e == null) {
+                                for (int j = 0; j < tickets.size(); j++) {
+                                    tickets.get(j).delete();
+                                }
+                            }
+                        }
+                    });
+                } else if (orders.get(i).getOrderType().equals("shop")) {
+                    BmobQuery<ShopOrder> ticketBmobQuery = new BmobQuery<>();
+                    ticketBmobQuery.addWhereEqualTo("orderId", orders.get(i).getObjectId());
+                    ticketBmobQuery.findObjects(new FindListener<ShopOrder>() {
+                        @Override
+                        public void done(List<ShopOrder> shopOrders, BmobException e) {
+                            if (e == null) {
+                                for (int j = 0; j < shopOrders.size(); j++) {
+                                    shopOrders.get(j).delete();
+                                }
+                            }
+                        }
+                    });
+                }
+                orders.get(i).delete(new UpdateListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (e == null) {
+
+                            if (finalI == booleens.size()) {
+                                //删除成功,还要删除订单详细内容
+                                getView().onDeletedSuccess();
+                            }
+
+                        }
+                    }
+                });
+            }
+        }
     }
 
     @NonNull

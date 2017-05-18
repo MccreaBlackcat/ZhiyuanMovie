@@ -19,7 +19,7 @@
 
     <!-- SD卡读写权限 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA" />
+    <!--<uses-permission android:name="android.permission.CAMERA" />-->
 
     <application
         android:name=".utils.ZhiyuanApplication"
@@ -60,7 +60,11 @@
         <activity android:name=".ui.activity.movie.TicketActivity" />
         <activity android:name=".ui.activity.mine.OrderActivity" />
         <activity android:name=".ui.activity.mine.QuestionActivity" />
-        <activity android:name=".ui.activity.mine.CommentActivity"></activity>
+        <activity android:name=".ui.activity.mine.CommentActivity" />
+        <activity android:name=".ui.activity.mine.SettingActivity" />
+        <activity android:name=".ui.activity.mine.ReNameActivity" />
+        <activity android:name=".ui.activity.mine.RePassWordActivity" />
+        <activity android:name=".ui.activity.mine.MineVipActivity"></activity>
     </application>
 
 </manifest>

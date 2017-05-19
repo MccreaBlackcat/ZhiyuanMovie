@@ -122,20 +122,30 @@ public class OrderPresenter extends BasePresenter<OrderView>{
                         public void done(List<Ticket> tickets, BmobException e) {
                             if (e == null) {
                                 for (int j = 0; j < tickets.size(); j++) {
-                                    tickets.get(j).delete();
+                                    tickets.get(j).delete(new UpdateListener() {
+                                        @Override
+                                        public void done(BmobException e) {
+
+                                        }
+                                    });
                                 }
                             }
                         }
                     });
                 } else if (orders.get(i).getOrderType().equals("shop")) {
-                    BmobQuery<ShopOrder> ticketBmobQuery = new BmobQuery<>();
-                    ticketBmobQuery.addWhereEqualTo("orderId", orders.get(i).getObjectId());
-                    ticketBmobQuery.findObjects(new FindListener<ShopOrder>() {
+                    BmobQuery<ShopOrder> shopBmobQuery = new BmobQuery<>();
+                    shopBmobQuery.addWhereEqualTo("orderId", orders.get(i).getObjectId());
+                    shopBmobQuery.findObjects(new FindListener<ShopOrder>() {
                         @Override
                         public void done(List<ShopOrder> shopOrders, BmobException e) {
                             if (e == null) {
                                 for (int j = 0; j < shopOrders.size(); j++) {
-                                    shopOrders.get(j).delete();
+                                    shopOrders.get(j).delete(new UpdateListener() {
+                                        @Override
+                                        public void done(BmobException e) {
+
+                                        }
+                                    });
                                 }
                             }
                         }
@@ -145,12 +155,7 @@ public class OrderPresenter extends BasePresenter<OrderView>{
                     @Override
                     public void done(BmobException e) {
                         if (e == null) {
-
-                            if (finalI == booleens.size()) {
-                                //删除成功,还要删除订单详细内容
-                                getView().onDeletedSuccess();
-                            }
-
+                            getView().onDeletedSuccess();
                         }
                     }
                 });

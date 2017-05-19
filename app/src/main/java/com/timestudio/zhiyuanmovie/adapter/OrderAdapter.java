@@ -53,6 +53,24 @@ public class OrderAdapter extends BaseAdapter {
         }
     }
 
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void upDateOrders() {
+        //将删除的数据移除掉
+        for (int i = 0; i < orders.size(); i++) {
+            if (isChecks.get(i)) {
+                orders.remove(i);
+            }
+        }
+        //重新设置
+        isChecks = new ArrayList<>();
+        for (int i = 0; i < orders.size(); i++) {
+            isChecks.add(false);
+        }
+    }
+
     public ArrayList<Boolean> getIsChecks() {
         return isChecks;
     }
@@ -104,7 +122,7 @@ public class OrderAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int i, View view, ViewGroup viewGroup) {
-        MyHolder holder;
+        final MyHolder holder;
         if (view == null) {
             view = inflater.inflate(R.layout.item_order_mine, null);
             holder = new MyHolder();
@@ -173,6 +191,7 @@ public class OrderAdapter extends BaseAdapter {
                 break;
 
         }
+
         holder.ll_order_details.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
@@ -183,8 +202,12 @@ public class OrderAdapter extends BaseAdapter {
         });
         if (isCheck) {
             holder.cb_order_checkBox.setVisibility(View.VISIBLE);
+            holder.btn_order_button.setVisibility(View.GONE);
         } else {
             holder.cb_order_checkBox.setVisibility(View.GONE);
+            if (!orderType.equals("order")) {
+                holder.btn_order_button.setVisibility(View.VISIBLE);
+            }
         }
         holder.cb_order_checkBox.setChecked(isChecks.get(i));
         holder.cb_order_checkBox.setOnClickListener(new View.OnClickListener() {

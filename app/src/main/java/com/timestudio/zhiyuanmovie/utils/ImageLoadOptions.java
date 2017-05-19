@@ -67,4 +67,20 @@ public class ImageLoadOptions {
         }
         return options_item;
     }
+
+    /**
+     * 图片加载选项
+     */
+    public static DisplayImageOptions build_splash() {
+        if (options_item == null) {
+            options_item = new DisplayImageOptions.Builder()
+                    .showImageForEmptyUri(R.drawable.default_portrait)/*如果空url显示什么*/
+                    .showImageOnFail(R.drawable.default_portrait)/*加载失败显示什么*/
+                    .cacheOnDisk(true)/*开启硬盘缓存*/
+                    .cacheInMemory(true)/*开启内存缓存*/
+                    .resetViewBeforeLoading(true)/*加载前重置ImageView*/
+                    .build();
+        }
+        return options_item;
+    }
 }

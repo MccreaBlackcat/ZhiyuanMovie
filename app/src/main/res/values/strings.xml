@@ -104,4 +104,5 @@
     <string name="mineJF">我的积分:</string>
     <string name="allSelect">全选</string>
     <string name="deletedOrder">删除</string>
+    <string name="countDown">倒计时</string>
 </resources>

@@ -14,7 +14,7 @@ import cn.bmob.v3.BmobConfig;
 import cn.bmob.v3.BmobSMS;
 
 /**
- * Created by hasee on 2017/4/19.
+ * Created by strongShen on 2017/4/19.
  */
 
 public class ZhiyuanApplication extends Application{

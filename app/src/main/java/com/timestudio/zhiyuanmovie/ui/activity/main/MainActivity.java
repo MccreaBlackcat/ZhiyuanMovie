@@ -1,12 +1,12 @@
 package com.timestudio.zhiyuanmovie.ui.activity.main;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -44,6 +44,9 @@ public class MainActivity extends BaseActivity implements MainView, View.OnClick
     private Fragment[] fragment = {movieFragment,shopFragment,findFragment,mineFragment};
     private Fragment currentFrag;
 
+    private long l_firstClickTime;
+    private long l_secondClickTime;
+    private boolean isExit;
 
 
     @Override
@@ -79,7 +82,6 @@ public class MainActivity extends BaseActivity implements MainView, View.OnClick
     protected void initView() {
 
         //加载电影fragment
-        Log.i("shen", "----------------");
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
         if (movieFragment != null) {
@@ -128,4 +130,34 @@ public class MainActivity extends BaseActivity implements MainView, View.OnClick
 
     }
 
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        doubleClickExit(keyCode, event);
+        return true;
+    }
+
+    /**
+     * @description 双击退出程序的函数
+     */
+    private void doubleClickExit(int keyCode,KeyEvent event){
+        //当用户第一次点击返回按钮时
+        if(keyCode == KeyEvent.KEYCODE_BACK && isExit == false){
+            isExit = true;//设置记录标志为true
+            l_firstClickTime = System.currentTimeMillis();//获取第一次点击退出键的时间
+            //显示再次点击退出提示
+            Toast.makeText(this,"再次点击退出",Toast.LENGTH_SHORT).show();
+        }
+        //用户第二次点击返回键
+        else if(keyCode == KeyEvent.KEYCODE_BACK && isExit == true){
+            l_secondClickTime = System.currentTimeMillis();//记录第二次点击退出的时间
+            //时间差在2秒内，退出程序
+            if(( l_secondClickTime - l_firstClickTime ) < 2000){
+                finish();
+            }else {
+                isExit = false; //重置记录退出标志
+                doubleClickExit(keyCode,event); //超出2000ms时，重新开始逻辑函数
+            }
+        }
+    }
 }

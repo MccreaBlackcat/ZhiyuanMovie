@@ -19,7 +19,8 @@
 
     <!-- SD卡读写权限 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <!--<uses-permission android:name="android.permission.CAMERA" />-->
+    <!-- <uses-permission android:name="android.permission.CAMERA" /> -->
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".utils.ZhiyuanApplication"
@@ -39,13 +40,8 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".ui.activity.main.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".ui.activity.main.MainActivity"
+            android:launchMode="singleInstance"/>
         <activity android:name=".ui.activity.user.login.LoginActivity" />
         <activity android:name=".ui.activity.user.regist.RegistActivity" />
         <activity android:name=".ui.activity.user.resetpassword.ResetPasswordActivity" />
@@ -64,7 +60,14 @@
         <activity android:name=".ui.activity.mine.SettingActivity" />
         <activity android:name=".ui.activity.mine.ReNameActivity" />
         <activity android:name=".ui.activity.mine.RePassWordActivity" />
-        <activity android:name=".ui.activity.mine.MineVipActivity"></activity>
+        <activity android:name=".ui.activity.mine.MineVipActivity" />
+        <activity android:name=".ui.activity.main.SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

@@ -16,6 +16,7 @@ import com.timestudio.zhiyuanmovie.base.BaseActivity;
 import com.timestudio.zhiyuanmovie.bean.Order;
 import com.timestudio.zhiyuanmovie.ui.activity.movie.TicketActivity;
 import com.timestudio.zhiyuanmovie.ui.activity.shop.ShopOrderActivity;
+import com.timestudio.zhiyuanmovie.widget.ProgressDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +57,7 @@ public class OrderActivity extends BaseActivity implements OrderView,OrderAdapte
     }
 
     private void initData() {
+        showProgress();
         //设置listview的Item点击事件
         lv_order.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -140,6 +142,7 @@ public class OrderActivity extends BaseActivity implements OrderView,OrderAdapte
         mOrders = orders;
         adapter.setOrders(orders);
         lv_order.setAdapter(adapter);
+        hideProgress();
     }
 
     @Override
@@ -147,6 +150,7 @@ public class OrderActivity extends BaseActivity implements OrderView,OrderAdapte
         mOrders = orders;
         adapter.setOrders(orders);
         lv_order.setAdapter(adapter);
+        hideProgress();
     }
 
     @Override
@@ -162,6 +166,12 @@ public class OrderActivity extends BaseActivity implements OrderView,OrderAdapte
     @Override
     public void onDeletedSuccess() {
         Toast.makeText(this,"删除成功",Toast.LENGTH_SHORT).show();
+        adapter.upDateOrders();
+        mOrders = adapter.getOrders();
+        adapter.notifyDataSetChanged();
+        adapter.setCheckBoxGone();
+        tv_deleted_cancel.setVisibility(View.GONE);
+        ll_order_deleted.setVisibility(View.GONE);
     }
 
     @Override
@@ -230,5 +240,19 @@ public class OrderActivity extends BaseActivity implements OrderView,OrderAdapte
                 ll_order_deleted.setVisibility(View.GONE);
                 break;
         }
+    }
+
+    private ProgressDialogFragment dialogFragment;
+
+    public void showProgress() {
+        if(dialogFragment == null){
+            dialogFragment = new ProgressDialogFragment();
+        }
+        if (dialogFragment.isVisible()) return;
+        dialogFragment.show(getSupportFragmentManager(),ProgressDialogFragment.class.getName());
+    }
+
+    public void hideProgress() {
+        dialogFragment.dismiss();
     }
 }

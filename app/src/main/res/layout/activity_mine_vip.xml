@@ -36,9 +36,9 @@
         <ImageView
             android:layout_width="@dimen/dp_100"
             android:layout_height="@dimen/dp_30"
-            android:layout_alignBottom="@+id/iv_vip_lvl"
-            android:layout_alignStart="@+id/iv_vip_lvl"
-            android:id="@+id/iv_vip_name" />
+            android:id="@+id/iv_vip_name"
+            android:layout_alignBottom="@+id/iv_vip_bg"
+            android:layout_alignStart="@+id/iv_vip_bg" />
     </RelativeLayout>
     <TextView
         android:layout_width="match_parent"

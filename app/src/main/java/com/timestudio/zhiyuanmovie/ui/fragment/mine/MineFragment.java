@@ -208,7 +208,9 @@ public class MineFragment extends Fragment implements View.OnClickListener,MineV
         public void onPhotoCropped(Uri uri) {
             headFile = new File(uri.getPath());
             user_head = BitmapFactory.decodeFile(headFile.getAbsolutePath());
-            iv_mine_photo.setImageBitmap(user_head);
+            if (user_head != null) {
+                iv_mine_photo.setImageBitmap(user_head);
+            }
             presenter.onPutUserPhoto(uri.getPath(),myUser);
             popup.dismiss();
         }

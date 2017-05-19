@@ -45,7 +45,7 @@ public class RegistActivity extends BaseActivity implements RegistView{
     private String phoneNumber;
     private String password;
     private String SMSCode;
-    private TimeCount time;
+    private TimeCount time;  //倒计时
 
     @Override
     public void onContentChanged() {
@@ -168,7 +168,7 @@ public class RegistActivity extends BaseActivity implements RegistView{
                     TextUtils.isEmpty(password) || TextUtils.isEmpty(SMSCode));
             if (isRegist) {
                 btn_registered.setEnabled(isRegist);
-                btn_registered.setBackground(getDrawable(R.drawable.btn_sel_getverification));
+                btn_registered.setBackgroundResource(R.drawable.btn_sel_getverification);
             } else {
                 btn_registered.setBackgroundResource(R.color.colorButtonFalse);
             }

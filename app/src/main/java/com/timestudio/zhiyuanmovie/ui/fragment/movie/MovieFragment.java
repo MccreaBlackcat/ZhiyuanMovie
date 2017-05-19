@@ -21,6 +21,7 @@ import com.timestudio.zhiyuanmovie.bean.MovieDetails;
 import com.timestudio.zhiyuanmovie.bean.MovieShow;
 import com.timestudio.zhiyuanmovie.ui.activity.movie.MovieDetailsActivity;
 import com.timestudio.zhiyuanmovie.ui.activity.movie.MovieShowActivity;
+import com.timestudio.zhiyuanmovie.widget.ProgressDialogFragment;
 
 import java.util.List;
 
@@ -89,6 +90,7 @@ public class MovieFragment extends Fragment implements MovieView,MovieAdapter.On
     }
 
     private void initView() {
+        showProgress();
         rv_movie.setLayoutManager(new GridLayoutManager(getContext(),1));
         presenter.getBannerData();
         adapter.setTypeClickListener(this);
@@ -136,7 +138,7 @@ public class MovieFragment extends Fragment implements MovieView,MovieAdapter.On
         }
         adapter.notifyDataSetChanged();
 
-
+        hideProgress();
     }
 
     @Override
@@ -182,5 +184,19 @@ public class MovieFragment extends Fragment implements MovieView,MovieAdapter.On
         intent.putExtra("movie", movie);
         startActivity(intent);
 
+    }
+
+    private ProgressDialogFragment dialogFragment;
+
+    public void showProgress() {
+        if(dialogFragment == null){
+            dialogFragment = new ProgressDialogFragment();
+        }
+        if (dialogFragment.isVisible()) return;
+        dialogFragment.show(getFragmentManager(), ProgressDialogFragment.class.getName());
+    }
+
+    public void hideProgress() {
+        dialogFragment.dismiss();
     }
 }
